@@ -44,10 +44,10 @@ This makes the incident graph far more useful, showing relationships between aut
 
 ## 📸 Screenshots
 - **Detection Rule Query & Entity Mapping**  
-  ![Detection Rule](./images/detection-rule.png)  
+  ![Detection Rule](./images/query.jpg)  
 
 - **Incident in Microsoft Sentinel**  
-  ![Incident Graph](./images/incident-graph.png)  
+  ![Incident Graph](./images/Incident.jpg)  
 
 ---
 
