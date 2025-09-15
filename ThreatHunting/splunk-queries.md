@@ -1,0 +1,1 @@
+Custom Splunk Queries – Created detection rules for common attack techniques.

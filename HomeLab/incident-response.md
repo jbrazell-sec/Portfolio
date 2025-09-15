@@ -1,0 +1,1 @@
+Incident Response Simulation – Investigated simulated security incidents using Splunk and Windows Event Logs.
